@@ -3,7 +3,7 @@ import DoctorCarousel from "../../components/UserComponents/Doctors";
 import Departments from "../../components/UserComponents/Departments";
 
 
-const Home = () => {
+const DoctorHome = () => {
     return (
       <>
         <Banner />
@@ -16,4 +16,4 @@ const Home = () => {
   };
   
 
-export default Home
+export default DoctorHome

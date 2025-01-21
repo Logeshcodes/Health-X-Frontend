@@ -3,7 +3,7 @@ import {Suspense} from 'react';
 import BrickLoader from '../components/UserComponents/BrickLoader';
 import DoctorLogin from '../pages/Doctors/DoctorLogin';
 import DoctorSignup from '../pages/Doctors/DoctorSignup';
-import Home from '../pages/Doctors/Home';
+import Home from '../pages/Doctors/DoctorHome';
 import Layout from '../Layout';
 
 const DoctorRouter = () => {
