@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card } from './card.tsx';
+import { Card } from '../../Card.tsx';
 import {
   Building2,
   Stethoscope,

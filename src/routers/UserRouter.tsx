@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import BrickLoader from '../components/UserComponents/BrickLoader';
+import BrickLoader from '../components/BrickLoader';
 import { Routes , Route } from 'react-router-dom';
 
 
@@ -14,23 +14,28 @@ import OTPVerification from "../pages/Users/verifyOTP"
 import ResetVerificationOTP from '../pages/Users/ResetVerifyOTP';
 import ResetPassword from '../pages/Users/ResetPassword';
 import DoctorListingPage from '../pages/Users/DoctorList';
+import About from '../pages/Users/About';
 
 const UserRouter = () => {
   return (
     <Suspense fallback={<BrickLoader />}>
         <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/user" element={<Layout />}>
                 <Route path="" element={<Home />} />
             </Route>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="signup" element={<SignupPage />} />
-            <Route path="forgot_password" element={<ForgotPassword />} />
-            <Route path="verify_otp" element={<OTPVerification />} />
-            <Route path="reset_password" element={<ResetPassword />} />
-            <Route path="reset_verify_otp" element={<ResetVerificationOTP />} />
-            <Route path="/" element={<Layout />}>
-                <Route path="doctor_list" element={<DoctorListingPage />} />
+            <Route path="/user/login" element={<LoginPage />} />
+            <Route path="/user/signup" element={<SignupPage />} />
+            <Route path="/user/forgot_password" element={<ForgotPassword />} />
+            <Route path="/user/verify_otp" element={<OTPVerification />} />
+            <Route path="/user/reset_password" element={<ResetPassword />} />
+            <Route path="/user/reset_verify_otp" element={<ResetVerificationOTP />} />
+            <Route path="/user" element={<Layout />}>
+                <Route path="/user/doctor_list" element={<DoctorListingPage />} />
             </Route>
+            <Route path="/user" element={<Layout />}>
+                <Route path="about" element={<About />} />
+            </Route>
+            
         </Routes>
 
     </Suspense>

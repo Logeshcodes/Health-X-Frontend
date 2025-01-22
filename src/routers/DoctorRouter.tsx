@@ -1,6 +1,6 @@
 import { Routes , Route } from 'react-router-dom'
 import {Suspense} from 'react';
-import BrickLoader from '../components/UserComponents/BrickLoader';
+import BrickLoader from '../components/BrickLoader';
 import DoctorLogin from '../pages/Doctors/DoctorLogin';
 import DoctorSignup from '../pages/Doctors/DoctorSignup';
 import Home from '../pages/Doctors/DoctorHome';

@@ -1,5 +1,5 @@
 
-import { Card } from "../../components/UserComponents/card2"
+import { Card } from "../../components/Card"
 
 
 const DoctorLogin = () => {

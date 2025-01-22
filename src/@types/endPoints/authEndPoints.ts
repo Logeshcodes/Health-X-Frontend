@@ -2,17 +2,26 @@
 const authentictaionRoutes = {
 
     // Users
-
-    signup_user:"/auth/user/register",
-    resendOtp_user:'/auth/user/resendOtp',
-    verifyOtp_user:'/auth/user/createUser',
-    login_user:'/auth/user/login',
-    logout_user:'/auth/user/logout',
-    resetPasswordLink_user:'/auth/user/verifyEmail',
-    verifyResetOtp_user:'/auth/user/verifyResetOtp',
-    forgotResendOtp_user:'/auth/user/forgotResendOtp',
-    resetPassword_user:'/auth/user/resetPassword',
     googleLogin_user:'/auth/user/googleLogin',
+
+    login_user:'/auth/user/login',
+    forgotResendOtp_user:'/auth/user/forgot_password',
+
+
+    signup_user:"/auth/user/signup",
+    verifyOtp_user:'/auth/user/verify_otp',
+    resendOtp_user:'/auth/user/resendOtp',
+
+    // resetPasswordLink_user:'/auth/user/verifyEmail',
+    verifyResetOtp_user:'/auth/user/reset_verify_otp',
+    resetPassword_user:'/auth/user/reset_password',
+    
+    logout_user:'/auth/user/logout',
+    
+    
+    
+    
+    
 }
 
 
@@ -21,3 +30,6 @@ const authentictaionRoutes = {
 
 
 export default authentictaionRoutes;
+
+
+

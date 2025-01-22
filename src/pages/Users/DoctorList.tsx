@@ -1,6 +1,6 @@
 
 import { Search, Calendar, ChevronDown } from 'lucide-react';
-import DoctorCard from '../../components/UserComponents/DoctorCard';
+import DoctorCard from '../../components/UserComponents/Doctor/DoctorCard';
 
 const DoctorListingPage = () => {
   return (
@@ -18,6 +18,10 @@ const DoctorListingPage = () => {
             Book appointments with minimum wait-time & verified doctor details
           </p>
         </div>
+
+
+
+        
 
         {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
@@ -53,6 +57,10 @@ const DoctorListingPage = () => {
             Clear Filter
           </button>
         </div>
+
+
+
+
 
         {/* Doctor Cards */}
         <div className="space-y-4">

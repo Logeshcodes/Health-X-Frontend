@@ -1,12 +1,12 @@
 // import { Shield } from 'lucide-react';
-import { Card } from "../../components/UserComponents/card2"
+import { Card } from "../../components/Card"
 import * as Yup from "yup"
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import {toast} from 'react-toastify'
-import { StudentGoogleLogin , login } from "../../api/studentAuthentication";
+import { UserGoogleLogin , login } from "../../api/UserAuthentication"
 import { setUser } from "../../redux/slices/userSlices";
-import { Login } from "../../@types/loginType";
+import { Login } from "../../@types/LoginType";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
@@ -47,7 +47,7 @@ const LoginPage = () => {
   const googleSubmit = async (credentialResponse: any) => {
     try {
       const decoded : any = jwtDecode(credentialResponse.credential);
-      const response = await StudentGoogleLogin({
+      const response = await UserGoogleLogin({
         name: decoded.name,
         email: decoded.email,
         password: decoded.sub,
@@ -132,7 +132,7 @@ const LoginPage = () => {
           <div className="flex items-center gap-2 mb-8">
             {/* <Shield className="w-6 h-6 text-blue-600" /> */}
             <img
-                src="Logo.png"
+                src="../../../Logo.png"
                 alt="Healthcare professional"
                 className="rounded-lg mb-4 w-10 h-10"
               />
@@ -141,83 +141,83 @@ const LoginPage = () => {
 
           <h2 className="text-2xl font-bold mb-8">Hi, Welcome Back! 👋</h2>
 
-          <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
-      {({ errors, touched }) => (
-        <Form className="space-y-6">
-          {/* Email Field */}
-          <div>
-            <div className="relative">
-              <Field
-                name="email"
-                type="email"
-                placeholder="Email"
-                className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.email && touched.email ? "focus:ring-red-500" : "focus:ring-purple-500"
-                }`}
-              />
-              {errors.email && touched.email && (
-                <div className="text-red-500 text-sm mt-1">{errors.email}</div>
-              )}
-            </div>
-          </div>
+        <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+          {({ errors, touched }) => (
+            <Form className="space-y-6">
+              {/* Email Field */}
+              <div>
+                <div className="relative">
+                  <Field
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
+                      errors.email && touched.email ? "focus:ring-red-500" : "focus:ring-purple-500"
+                    }`}
+                  />
+                  {errors.email && touched.email && (
+                    <div className="text-red-500 text-sm mt-1">{errors.email}</div>
+                  )}
+                </div>
+              </div>
 
-          {/* Password Field */}
-          <div>
-            <div className="relative">
-              <Field
-                name="password"
-                type="password"
-                placeholder="Password"
-                className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
-                  errors.password && touched.password ? "focus:ring-red-500" : "focus:ring-purple-500"
-                }`}
-              />
-              {errors.password && touched.password && (
-                <div className="text-red-500 text-sm mt-1">{errors.password}</div>
-              )}
-            </div>
-            <div className="text-right">
-              <a href="/forgot_password" className="text-red-500 hover:text-red-600 text-sm">
-                Forgot Password?
-              </a>
-            </div>
-          </div>
+              {/* Password Field */}
+              <div>
+                <div className="relative">
+                  <Field
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
+                      errors.password && touched.password ? "focus:ring-red-500" : "focus:ring-purple-500"
+                    }`}
+                  />
+                  {errors.password && touched.password && (
+                    <div className="text-red-500 text-sm mt-1">{errors.password}</div>
+                  )}
+                </div>
+                <div className="text-right">
+                  <a href="/forgot_password" className="text-red-500 hover:text-red-600 text-sm">
+                    Forgot Password?
+                  </a>
+                </div>
+              </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Login Now
-          </button>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Login Now
+              </button>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Or With</span>
-            </div>
-          </div>
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or With</span>
+                </div>
+              </div>
 
-          {/* Google Login */}
-          {/* <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID as string}>
-            <GoogleLogin
-              onSuccess={googleSubmit}
-              onError={() => console.error("Google Login Failed")}
-            />
-          </GoogleOAuthProvider> */}
+              {/* Google Login */}
+              {/* <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID as string}>
+                <GoogleLogin
+                  onSuccess={googleSubmit}
+                  onError={() => console.error("Google Login Failed")}
+                />
+              </GoogleOAuthProvider> */}
 
-          {/* Sign Up Link */}
-          <p className="text-center text-sm">
-            Don't have an account?{" "}
-            <a href="/signup" className="text-purple-600 hover:text-purple-700 font-medium">
-              Sign Up
-            </a>
-          </p>
-        </Form>
-      )}
+              {/* Sign Up Link */}
+              <p className="text-center text-sm">
+                Don't have an account?{" "}
+                <a href="/user/signup" className="text-purple-600 hover:text-purple-700 font-medium">
+                  Sign Up
+                </a>
+              </p>
+            </Form>
+          )}
     </Formik>
         </div>
 
@@ -227,7 +227,7 @@ const LoginPage = () => {
             <h2 className="text-3xl font-bold mb-8 ">Patient Login</h2>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-14 ml-16 max-w-sm">
               <img
-                src="Login-template.png"
+                src="../../../Login-template.png"
                 alt="Healthcare professional"
                 className="rounded-lg mb-4"
               />

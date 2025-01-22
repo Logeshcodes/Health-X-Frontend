@@ -1,14 +1,51 @@
-import { useState } from 'react';
-import { Card } from "../../components/UserComponents/card2"
+import { useCallback } from 'react';
+import { Card } from "../../components/Card"
+import * as Yup from "yup";
+
+import { Formik, Form , Field } from "formik";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
+import { signup } from '../../api/UserAuthentication';
+
+import { signUp } from '../../@types/SignupType';
+
+// Validation Schema
+const signupSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+  .matches(/^\S*$/, "Password must not contain spaces")
+  .min(6, "Password must be at least 6 characters")
+  .required("Password is required")
+})
+
 
 const SignupPage = () => {
-  const [contactInfo, setContactInfo] = useState('');
+ 
 
-  const handleSubmit = (e : any) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', contactInfo);
-  };
+  const navigate = useNavigate();
+
+  const handleSubmit = useCallback(
+    async (values: signUp) => {
+      try {
+        
+        const response = await signup(values);
+        if (response.success) {
+          localStorage.setItem("verificationTokenUser", response.token);
+          localStorage.setItem("email", values.email);
+          toast.success(response.message);
+          navigate("/user/verify_otp");
+        } else {
+          toast.error(response.message);
+          
+        }
+      } catch (error: any) {
+        toast.error(error.message || "Unknown Error Occurred!");
+        
+      }
+    },[]
+  );
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-500 to-cyan-400 p-4 flex items-center justify-center">
@@ -19,7 +56,7 @@ const SignupPage = () => {
         <div className="flex items-center gap-2 mb-6">
               
               <img
-                src="Logo.png"
+                src="../../../Logo.png"
                 alt="Healthcare professional"
                 className="rounded-lg mb-4 w-10 h-10"
               />
@@ -32,31 +69,52 @@ const SignupPage = () => {
             <h3 className="text-xl font-semibold text-gray-700 mb-6">
               Get started with your email
               <br />
-              Or Mobile Number
+              & set your Password
             </h3>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="rounded-lg bg-gray-100 p-4">
-              {/* <label className="block text-sm text-gray-600 mb-2">
-                Email or Mobile Number:
-              </label> */}
-              <input
-                type="text"
-                value={contactInfo}
-                onChange={(e) => setContactInfo(e.target.value)}
-                className="w-full bg-transparent border-none focus:outline-none text-gray-800"
-                placeholder="Enter email or mobile number"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+
+          <Formik
+              initialValues={{ email: '', password: '' }} 
+              validationSchema={signupSchema}
+              onSubmit={handleSubmit}
             >
-              Continue
-            </button>
-          </form>
+              {({ errors, touched }) => (
+                <Form className="space-y-6">
+                  <div className="rounded-lg bg-gray-100 p-4">
+                    <Field
+                      name="email"
+                      type="text"
+                      className="w-full bg-transparent border-none focus:outline-none text-gray-800"
+                      placeholder="Email"
+                    />
+                    
+                  </div>
+                  {errors.email && touched.email && (
+                      <div className="text-red-500 text-sm">{errors.email}</div>
+                    )}
+                  <div className="rounded-lg bg-gray-100 p-4">
+                    <Field
+                      name="password"
+                      type="password"
+                      className="w-full bg-transparent border-none focus:outline-none text-gray-800"
+                      placeholder="Password"
+                    />
+                    
+                  </div>
+                  {errors.password && touched.password && (
+                      <div className="text-red-500 text-sm">{errors.password}</div>
+                    )}
+                  <button
+                    type="submit"
+                    className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+                  >
+                    Continue
+                  </button>
+                </Form>
+              )}
+           </Formik>
+
 
 
           <div className="flex items-center gap-4 m-5">
@@ -71,12 +129,12 @@ const SignupPage = () => {
               </button>
 
               <div className="text-center space-y-2 m-2">
-                <a href="#" className="text-red-500 hover:underline">
+                <a href="doctor/register" className="text-red-500 hover:underline">
                   Register as Doctor ? Click here
                 </a>
                 <p className="text-gray-600">
                   Already have an account ?{' '}
-                  <a href="#" className="text-purple-600 hover:underline">
+                  <a href="/user/login" className="text-purple-600 hover:underline">
                     Login
                   </a>
                 </p>
@@ -89,7 +147,7 @@ const SignupPage = () => {
             <h2 className="text-3xl font-bold mb-8">Patient Signup</h2>
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-10 ml-16 max-w-sm">
               <img
-                src="Login-template.png"
+                src="../../../Login-template.png"
                 alt="Healthcare professional"
                 className="rounded-lg mb-4"
               />

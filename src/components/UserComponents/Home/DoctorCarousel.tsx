@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import DoctorCard from './DoctorCard';
+import PaginationDots from './PaginationDots';
 
 const DoctorCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(2);
@@ -30,13 +32,11 @@ const DoctorCarousel = () => {
       specialty: "Dermatologist",
       imageUrl: "https://media.istockphoto.com/id/1219185969/vector/the-icon-the-doctor-on-a-turquoise-background-in-a-circle-vector-illustration.jpg?s=612x612&w=0&k=20&c=NufjEIGGpxX-fic8Z-uVQAN7X-7Y5JIedJ3KXMbk_HU="
     },
-    
     {
       name: "Dr. Amanda Martinez",
       specialty: "Dermatologist",
       imageUrl: "https://img.freepik.com/premium-vector/female-doctor-with-stethoscope-round-icon-vector-illustration-cartoon-style_1142-66659.jpg"
     },
-    
     {
       name: "Dr. Amanda Martinez",
       specialty: "Dermatologist",
@@ -50,11 +50,11 @@ const DoctorCarousel = () => {
   ];
 
   const handlePrevious = () => {
-    setCurrentIndex(prev => (prev === 0 ? doctors.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? doctors.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex(prev => (prev === doctors.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === doctors.length - 1 ? 0 : prev + 1));
   };
 
   const getVisibleDoctors = () => {
@@ -71,17 +71,17 @@ const DoctorCarousel = () => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold text-center mb-12">Our Medical Specialists</h2>
-      
+
       <div className="relative">
-               {/* Navigation Buttons */}
-        <button 
+        {/* Navigation Buttons */}
+        <button
           onClick={handlePrevious}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
         >
           <ChevronLeft size={24} />
         </button>
-        
-        <button 
+
+        <button
           onClick={handleNext}
           className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600"
         >
@@ -91,41 +91,16 @@ const DoctorCarousel = () => {
         {/* Doctors Carousel */}
         <div className="flex justify-center items-center gap-4 overflow-hidden">
           {getVisibleDoctors().map((doctor, idx) => (
-            <div
-              key={idx}
-              className={`transform transition-all duration-300 ${
-                doctor.position === 0 
-                  ? 'scale-100 opacity-100 z-10' 
-                  : Math.abs(doctor.position) === 1
-                  ? 'scale-75 opacity-70'
-                  : 'scale-50 opacity-40'
-              }`}
-            >
-              <div className="bg-white rounded-lg shadow-lg p-4 w-64">
-                <img
-                  src={doctor.imageUrl}
-                  alt={doctor.name}
-                  className="w-full h-48 object-cover rounded-lg mb-4"
-                />
-                <h3 className="text-xl font-semibold text-center mb-2">{doctor.name}</h3>
-                <p className="text-gray-600 text-center">{doctor.specialty}</p>
-              </div>
-            </div>
+            <DoctorCard key={idx} doctor={doctor} position={doctor.position} />
           ))}
         </div>
 
         {/* Pagination Dots */}
-        <div className="flex justify-center gap-2 mt-8">
-          {doctors.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                idx === currentIndex ? 'bg-blue-600 w-6' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
+        <PaginationDots
+          doctors={doctors}
+          currentIndex={currentIndex}
+          onDotClick={setCurrentIndex}
+        />
       </div>
     </div>
   );

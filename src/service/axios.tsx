@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 export const API = axios.create({
-    baseURL: "http://localhost:5001",
+    baseURL: "http://localhost:5000",
     headers: {
       "Content-Type": "application/json",
       withCredentials: true,
@@ -17,10 +17,10 @@ export const API = axios.create({
   API.interceptors.request.use(
     (config) => {
       
-      const verificationTokenPatient = localStorage.getItem("verificationTokenPatient");
+      const verificationTokenUser= localStorage.getItem("verificationTokenUser");
   
-      if (verificationTokenPatient) {
-        config.headers["the-verify-token"] = verificationTokenPatient;
+      if (verificationTokenUser) {
+        config.headers["the-verify-token"] = verificationTokenUser;
       }
       return config;
     },

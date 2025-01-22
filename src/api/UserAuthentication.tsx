@@ -1,10 +1,10 @@
 import { API } from "../service/axios"
 import authentictaionRoutes from "../@types/endPoints/authEndPoints"
 
+import { userData } from "../@types/UserDataType"
 
 
-
-export const StudentGoogleLogin = async (loginData:object)=>{
+export const UserGoogleLogin = async (loginData:object)=>{
     try {
         const response = await API.post(authentictaionRoutes.googleLogin_user, loginData,{
           withCredentials:true
@@ -27,5 +27,22 @@ export const StudentGoogleLogin = async (loginData:object)=>{
       return response.data;
     } catch (error) {
       throw error;
+    }
+  };
+
+
+  export const signup = async (userData: userData): Promise<any> => {
+    try {
+      const response = await API.post(
+        authentictaionRoutes.signup_user,
+        userData
+      );
+      console.log(response.data, "response");
+      return response.data;
+    } catch (error: any) {
+      if (error.response.status === 404) {
+        throw error;
+      }
+      console.log(error.message);
     }
   };

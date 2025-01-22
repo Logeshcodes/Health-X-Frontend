@@ -1,5 +1,4 @@
-import React from 'react';
-import { GitBranch } from 'lucide-react';
+
 
 const AdminLogin = () => {
   return (
@@ -29,7 +28,7 @@ const AdminLogin = () => {
             </div>
 
             {/* Right Side - Login Form */}
-            
+
             <div className="w-full md:w-1/2 py-16 px-12">
               <h2 className="text-3xl mb-4 font-bold">Hi Admin, Welcome Back! 👋</h2>
               <p className="mb-8 text-gray-600">
