@@ -1,34 +1,103 @@
-import { useState } from 'react';
-import { Upload, Eye, EyeOff } from 'lucide-react';
+import { Upload} from 'lucide-react';
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import {  toast } from "react-toastify";
+import { useCallback } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+import PasswordField from '../Users/common/passwordField';
+
+import InputField from '../Users/common/inputField';
+
+import { DoctorRegister } from '../../@types/DoctorSignupType';
+import { signup } from '../../api/DoctorAuthentication';
 
 
 const DoctorSignup = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    department: '',
-    consultationType: '',
-    education: '',
-    experience: '',
-    description: '',
-    password: '',
-    confirmPassword: ''
+
+
+
+
+  const navigate = useNavigate()
+
+  const initialValues = {
+    name: "",
+    email: "",
+    phone: "",
+    department: "",
+    consultationType: "",
+    education: "",
+    experience: "",
+    description: "",
+    password: "",
+    confirmPassword: "",
+    MedicalLicense: "",
+  };
+  
+
+
+  const signupSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Name must be at least 3 characters")
+      .required("Name is required"),
+    email: Yup.string()
+      .email("Invalid email")
+      .required("Email is required"),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+      .required("Phone number is required"),
+    department: Yup.string().required("Department is required"),
+    consultationType: Yup.string()
+      .oneOf(["In-person", "Online"], "Invalid consultation type")
+      .required("Consultation type is required"),
+    education: Yup.string()
+      .min(2, "Education must be at least 2 characters")
+      .required("Education is required"),
+    experience: Yup.number()
+      .typeError("Experience must be a number")
+      .min(0, "Experience cannot be negative")
+      .required("Experience is required"),
+    description: Yup.string()
+      .max(500, "Description must be less than 500 characters")
+      .required("Description is required"),
+    password: Yup.string()
+      .matches(/^\S*$/, "Password must not contain spaces")
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm password is required"),
+    MedicalLicense: Yup.string().required("Medical License is required"),
   });
+  
 
-  const handleSubmit = (e : any) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-  };
+  const handleSubmit =  useCallback ( async (values: DoctorRegister) => {
+    try {
+      
+      console.log("Signup click")
+      const response = await signup(values);
+      console.log(response, "ressss");
+      if (response.success) {
+       
+        localStorage.setItem("verificationToken",response.token);
+        localStorage.setItem("email",values.email)
+        console.log("sucess");
 
-  const handleChange = (e : any) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+        toast.success(response.message);
+        
+        navigate("/doctor/verify_otp");
+      } else {
+        toast.error(response.message);
+       
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Unknown Error Occured !");
+    }
+  },[]
+);
+
+
+
 
   return (
     <div className="min-h-screen bg-purple-100 p-4 flex items-center justify-center">
@@ -43,8 +112,9 @@ const DoctorSignup = () => {
           </div>
           <h1 className="text-white text-4xl font-bold mb-6">Doctor Login</h1>
           <div className="bg-purple-500 rounded-xl p-6">
+         
           <img
-                    src="https://cdn.dribbble.com/users/514480/screenshots/2091133/media/707a1f1c7d082f47858b783edaf64129.gif"
+                    src="../../../Logo.png"
                     className="rounded-lg mb-4"
                   />
           </div>
@@ -53,144 +123,136 @@ const DoctorSignup = () => {
         {/* Right side - Form */}
         <div className="w-full lg:w-1/2 p-8">
           <h2 className="text-2xl font-bold mb-6">Create a new account!</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <input
-                type="text"
-                name="name"
-                placeholder="Name"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
+        
 
-            <div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone number"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <select
-                name="department"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              >
-                <option value="">Department</option>
-                <option value="cardiology">Cardiology</option>
-                <option value="neurology">Neurology</option>
-                <option value="pediatrics">Pediatrics</option>
-                <option value="orthopedics">Orthopedics</option>
-              </select>
-            </div>
-
-            <div>
-              <select
-                name="consultationType"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              >
-                <option value="">Consultation Type</option>
-                <option value="inPerson">In-Person</option>
-                <option value="virtual">Virtual</option>
-                <option value="both">Both</option>
-              </select>
-            </div>
-
-            <div>
-              <input
-                type="text"
-                name="education"
-                placeholder="Education"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <input
-                type="text"
-                name="experience"
-                placeholder="Experience"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div>
-              <textarea
-                name="description"
-                placeholder="Description"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                placeholder="Password"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-gray-500"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            <div>
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                className="w-full p-3 rounded-lg bg-gray-50 border border-gray-200"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="flex-1 border border-dashed border-gray-300 rounded-lg p-4">
-                <div className="flex items-center justify-center">
-                  <Upload className="text-gray-400" />
-                  <span className="ml-2 text-sm text-gray-500">Upload Medical License</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Send OTP
-            </button>
-
-            <p className="text-center text-gray-600">
-              Already have an account?{' '}
-              <a href="login" className="text-purple-600 font-medium">
-                Login
-              </a>
-            </p>
-          </form>
+      <Formik
+          initialValues={initialValues}
+          validationSchema={signupSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting  }) => (
+             <Form className="space-y-6 my-4 flex flex-col justify-center">
+             {/* Name Field */}
+             <div>
+               <InputField type="text" name="name" placeholder="Name" label="Name" />
+             </div>
+   
+             {/* Email Field */}
+             <div>
+               <InputField type="email" name="email" placeholder="Email" label="Email" />
+             </div>
+   
+             {/* Phone Field */}
+             <div>
+               <InputField
+                 type="text"
+                 name="phone"
+                 placeholder="Phone Number"
+                 label="Phone"
+               />
+             </div>
+   
+             {/* Department Field */}
+             <div>
+               <InputField
+                 type="text"
+                 name="department"
+                 placeholder="Department"
+                 label="Department"
+               />
+             </div>
+   
+             {/* Consultation Type Field */}
+             <div>
+               <InputField
+                 type="text"
+                 name="consultationType"
+                 placeholder="Consultation Type"
+                 label="Consultation Type (In-person/Online)"
+               />
+             </div>
+   
+             {/* Education Field */}
+             <div>
+               <InputField
+                 type="text"
+                 name="education"
+                 placeholder="Education"
+                 label="Education"
+               />
+             </div>
+   
+             {/* Experience Field */}
+             <div>
+               <InputField
+                 type="number"
+                 name="experience"
+                 placeholder="Experience (in years)"
+                 label="Experience"
+               />
+             </div>
+   
+             {/* Description Field */}
+             <div>
+               <InputField
+                 type="textarea"
+                 name="description"
+                 placeholder="Short Description"
+                 label="Description"
+               />
+             </div>
+   
+             {/* Password Field */}
+             <div>
+               <PasswordField  name="password" placeholder="Password" />
+             </div>
+   
+             {/* Confirm Password Field */}
+             <div>
+               <PasswordField
+                 name="confirmPassword"
+                 placeholder="Confirm Password"
+               />
+             </div>
+   
+             {/* Upload Medical License Field */}
+             <div className="flex items-center space-x-4">
+               <div className="flex-1 border border-dashed border-gray-300 rounded-lg p-4">
+                 <label className="flex items-center justify-center cursor-pointer">
+                   <Upload className="text-gray-400" />
+                   <span className="ml-2 text-sm text-gray-500">
+                     Medical License
+                   </span>
+                   <InputField
+                     type="file"
+                     name="MedicalLicense"
+                     placeholder=''
+                     label=''
+                    
+                   />
+                 </label>
+               </div>
+             </div>
+   
+             {/* Submit Button */}
+             <button
+               type="submit"
+               disabled={isSubmitting}
+               className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+             >
+               Continue
+             </button>
+   
+             {/* Login Redirect */}
+             <div className="text-sm font-medium text-gray-900 cursor-pointer text-center">
+               Have an account?{" "}
+               <a href="/doctor/login" className="text-purple-700 hover:underline">
+                 Log In
+               </a>
+             </div>
+           </Form>
+          )}
+        </Formik>
         </div>
       </div>
     </div>

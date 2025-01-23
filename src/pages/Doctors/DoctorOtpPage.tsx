@@ -2,10 +2,10 @@ import  { useState , useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { resendOtp , verifyOtp } from '../../api/UserAuthentication';
+import { resendOtp , verifyOtp } from '../../api/DoctorAuthentication';
 
 
-const verificationOTP = () => {
+const DoctorVerificationOTP = () => {
 
   const [otp, setOtp] = useState<string[]>(Array(4).fill(''));
   const [counter, setCounter] = useState<number>(10);
@@ -37,6 +37,7 @@ const verificationOTP = () => {
       setCounter(10)
   
       let email= localStorage.getItem("email")
+      
       if(email){
         const respone=await resendOtp(email)
         if(respone.success){
@@ -98,7 +99,7 @@ const verificationOTP = () => {
         localStorage.removeItem('verificationToken')
         localStorage.removeItem('email')
         setTimeout(()=>{
-          navigate('/user')
+          navigate('/doctor')
           
         },1000)
   
@@ -191,4 +192,4 @@ const verificationOTP = () => {
   );
 };
 
-export default verificationOTP;
+export default DoctorVerificationOTP;

@@ -10,6 +10,7 @@ import { signup } from '../../api/UserAuthentication';
 
 import { signUp } from '../../@types/SignupType';
 
+
 // Validation Schema
 const signupSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Email is required"),
@@ -28,10 +29,11 @@ const SignupPage = () => {
   const handleSubmit = useCallback(
     async (values: signUp) => {
       try {
-        
+        console.log("Clicked...")
         const response = await signup(values);
+      
         if (response.success) {
-          localStorage.setItem("verificationTokenUser", response.token);
+          localStorage.setItem("verificationToken", response.token);
           localStorage.setItem("email", values.email);
           toast.success(response.message);
           navigate("/user/verify_otp");
@@ -129,7 +131,7 @@ const SignupPage = () => {
               </button>
 
               <div className="text-center space-y-2 m-2">
-                <a href="doctor/register" className="text-red-500 hover:underline">
+                <a href="/doctor/register" className="text-red-500 hover:underline">
                   Register as Doctor ? Click here
                 </a>
                 <p className="text-gray-600">

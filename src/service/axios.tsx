@@ -17,10 +17,10 @@ export const API = axios.create({
   API.interceptors.request.use(
     (config) => {
       
-      const verificationTokenUser= localStorage.getItem("verificationTokenUser");
+      const verificationToken= localStorage.getItem("verificationToken");
   
-      if (verificationTokenUser) {
-        config.headers["the-verify-token"] = verificationTokenUser;
+      if (verificationToken) {
+        config.headers["the-verify-token"] = verificationToken;
       }
       return config;
     },

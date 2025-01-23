@@ -1,18 +1,20 @@
+'use client'
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface User {
-    userId: string,
-    name: string,
-    email: string,
-    role: string
+    userId: string | null,
+    name: string | null,
+    email: string | null,
+    role: string | null
 }
 
 // Initialize state
 const initialState: User = {
-    userId: '',
-    name: '',
-    email: '',
-    role: ''
+    userId: null,
+    name: null,
+    email: null,
+    role: null
 };
 
 const userSlice = createSlice({
@@ -32,10 +34,10 @@ const userSlice = createSlice({
         },
 
         clearUserDetials: (state) => {
-            state.userId = ''
-            state.name = ''
-            state.email = ''
-            state.role = ''
+            state.userId = null
+            state.name = null
+            state.email = null
+            state.role = null
 
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('user');

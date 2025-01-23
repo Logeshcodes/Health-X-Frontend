@@ -4,6 +4,7 @@ import authentictaionRoutes from "../@types/endPoints/authEndPoints"
 import { userData } from "../@types/UserDataType"
 
 
+
 export const UserGoogleLogin = async (loginData:object)=>{
     try {
         const response = await API.post(authentictaionRoutes.googleLogin_user, loginData,{
@@ -21,7 +22,7 @@ export const UserGoogleLogin = async (loginData:object)=>{
       const response = await API.post(authentictaionRoutes.login_user, {
         email,password
       }, {
-        withCredentials: true, // Ensure that cookies are sent with the request
+        withCredentials: true, 
       });
       console.log(response.data, "response login");
       return response.data;
@@ -33,6 +34,8 @@ export const UserGoogleLogin = async (loginData:object)=>{
 
   export const signup = async (userData: userData): Promise<any> => {
     try {
+      console.log("users data..", userData)
+
       const response = await API.post(
         authentictaionRoutes.signup_user,
         userData
@@ -44,5 +47,30 @@ export const UserGoogleLogin = async (loginData:object)=>{
         throw error;
       }
       console.log(error.message);
+    }
+  };
+
+
+  export const resendOtp = async (email: string): Promise<any> => {
+    try {
+      const response = await API.post(authentictaionRoutes.resendOtp_user, {
+        email,
+      });
+      console.log(response.data, "response resendOtp");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  export const verifyOtp = async (otp: string): Promise<any> => {
+    try {
+      const response = await API.post(authentictaionRoutes.verifyOtp_user, {
+        otp,
+      });
+      console.log(response.data, "response verifyOtp");
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };

@@ -1,26 +1,31 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
 
-
 interface inputFieldProps {
   type: string;
   placeholder: string;
   value?: string;
   name: string;
+  label: string;
+ 
 }
 
-const  inputField: React.FC<inputFieldProps> = ({
+const InputField: React.FC<inputFieldProps > = ({
   type,
   placeholder,
   value,
   name,
+  label,
+ 
 }) => {
-
   return (
     <>
       <div className="flex flex-col">
-        <label htmlFor={name} className="block text-gray-800 text-xs font-semibold mb-2">
-          {placeholder.toUpperCase()}
+        <label
+          htmlFor={name}
+          className="block text-gray-800 text-xs font-semibold mb-2"
+        >
+          {label.toUpperCase()}
         </label>
         <Field
           className={`w-full px-5 py-3 rounded-lg ${
@@ -29,6 +34,7 @@ const  inputField: React.FC<inputFieldProps> = ({
               
            border-transparent text-black  text-sm focus:outline-none focus:border-2 focus:outline bg-gray-100`}
           type={type}
+          
           placeholder={placeholder}
           value={value}
           id={name}
@@ -42,4 +48,4 @@ const  inputField: React.FC<inputFieldProps> = ({
     </>
   );
 };
-export default inputField;
+export default InputField;

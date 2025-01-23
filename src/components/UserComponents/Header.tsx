@@ -3,6 +3,14 @@ import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Home, Users, Calendar, Grid, Info, LogIn } from 'lucide-react';
 
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/reducer/reducer"
+import { clearUserDetials } from "../../redux/slices/userSlice";
+import axios from 'axios';
+
 const navigation = [
   { name: 'Home', href: '/', id: 'home', icon: Home },
   { name: 'Doctors', href: '/doctor_list', id: 'doctors', icon: Users },
@@ -15,7 +23,18 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
 
+
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  const user = useSelector((state: RootState) => state.UserSlice);
+  
+
   useEffect(() => {
+
+
     const currentPath = window.location.pathname;
     const activeNavItem = navigation.find((item) => item.href === currentPath);
     if (activeNavItem) {
@@ -26,6 +45,12 @@ export default function Header() {
   const handleNavigation = (href :  string , id :  string)  => {
     setActiveTab(id);
     window.location.href = href; // Navigate to the URL
+  };
+
+  const handleLogout = () => {
+    dispatch(clearUserDetials ());
+    toast.success("Logged out successfully");
+    navigate("/user/login");
   };
 
   return (
@@ -75,14 +100,24 @@ export default function Header() {
           </div>
 
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="/login">
-              <button
-                type="button"
-                className="mr-3 inline-block px-6 py-3 font-bold text-center bg-gradient-to-tl from-blue-600 to-cyan-400 uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs text-white"
-              >
-                Login
-              </button>
-            </a>
+            {user ? (
+              <a href="/profile">
+                <img
+                  src={'../../../default-avatar.png'} 
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full border-2 border-white object-cover cursor-pointer"
+                />
+              </a>
+            ) : (
+              <a href="/user/login">
+                <button
+                  type="button"
+                  className="mr-3 inline-block px-6 py-3 font-bold text-center bg-gradient-to-tl from-blue-600 to-cyan-400 uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs text-white"
+                >
+                  Login
+                </button>
+              </a>
+            )}
           </div>
         </nav>
 

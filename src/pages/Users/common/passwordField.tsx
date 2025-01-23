@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Field, ErrorMessage } from "formik";
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-// import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import {  Eye, EyeOff } from 'lucide-react';
 
 interface PasswordFieldProps {
   name: string;
@@ -23,7 +22,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
     }, 1000);
   };
 
-//   const eyeIcon = showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />;
+  const eyeIcon = showPassword ? <Eye /> : <EyeOff />;
 
 
   return (
@@ -44,7 +43,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
         <div
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-900 cursor-pointer"
           onClick={togglePassword}>
-          {/* {eyeIcon} */}
+          {eyeIcon}
         </div>
       </div>
       <ErrorMessage

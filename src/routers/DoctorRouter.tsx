@@ -4,6 +4,7 @@ import BrickLoader from '../components/BrickLoader';
 import DoctorLogin from '../pages/Doctors/DoctorLogin';
 import DoctorSignup from '../pages/Doctors/DoctorSignup';
 import Home from '../pages/Doctors/DoctorHome';
+import DoctorVerificationOTP from '../pages/Doctors/DoctorOtpPage';
 import Layout from '../Layout';
 
 const DoctorRouter = () => {
@@ -15,6 +16,7 @@ const DoctorRouter = () => {
             </Route>
             <Route path="login" element={<DoctorLogin />} />
             <Route path="register" element={<DoctorSignup />} />
+            <Route path="verify_otp" element={<DoctorVerificationOTP />} />
             
         </Routes>
 

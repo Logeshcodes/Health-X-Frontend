@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import {toast} from 'react-toastify'
 import { UserGoogleLogin , login } from "../../api/UserAuthentication"
-import { setUser } from "../../redux/slices/userSlices";
+import { setUser } from "../../redux/slices/userSlice";
 import { Login } from "../../@types/LoginType";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
@@ -29,7 +29,7 @@ const loginSchema = Yup.object().shape({
 const LoginPage = () => {
 
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -79,7 +79,7 @@ const LoginPage = () => {
   const onSubmit = async (data: Login) => {
     try {
       // Perform the login request
-      // console.log("Response received:",data);
+      console.log("Response received:",data);
       const response = await login(data.email,data.password); // Assuming `login` is an API function
       console.log("Response received:>", response.message);
 
@@ -100,7 +100,7 @@ const LoginPage = () => {
 
         // Redirect to home page after a  delay
         setTimeout(() => {
-          navigate(`/home`);
+          navigate(`/user`);
         }, 1000);
       } else {
         // Log error and handle different error messages
@@ -142,6 +142,7 @@ const LoginPage = () => {
           <h2 className="text-2xl font-bold mb-8">Hi, Welcome Back! 👋</h2>
 
         <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+
           {({ errors, touched }) => (
             <Form className="space-y-6">
               {/* Email Field */}
