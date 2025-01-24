@@ -98,7 +98,7 @@ const verificationOTP = () => {
         localStorage.removeItem('verificationToken')
         localStorage.removeItem('email')
         setTimeout(()=>{
-          navigate('/user')
+          navigate('/user/login')
           
         },1000)
   

@@ -5,13 +5,13 @@ import DoctorLogin from '../pages/Doctors/DoctorLogin';
 import DoctorSignup from '../pages/Doctors/DoctorSignup';
 import Home from '../pages/Doctors/DoctorHome';
 import DoctorVerificationOTP from '../pages/Doctors/DoctorOtpPage';
-import Layout from '../Layout';
+import DoctorLayout from '../DoctorLayout';
 
 const DoctorRouter = () => {
   return (
     <Suspense fallback={<BrickLoader />}>
         <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<DoctorLayout />}>
                 <Route path="" element={<Home />} />
             </Route>
             <Route path="login" element={<DoctorLogin />} />

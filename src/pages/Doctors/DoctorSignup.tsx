@@ -103,7 +103,7 @@ const DoctorSignup = () => {
     }
 
       const response = await signup(formData);
-      console.log("response ???" ,response, );
+      console.log("response ?" ,response, );
       if (response.success) {
         localStorage.setItem("verificationToken", response.token);
         localStorage.setItem("email", values.email);
@@ -146,7 +146,7 @@ const DoctorSignup = () => {
                 <InputField type="email" name="email" placeholder="Email" label="Email" />
                 <InputField type="text" name="phone" placeholder="Phone" label="Phone" />
                 <InputField type="text" name="department" placeholder="Department" label="Department" />
-                <InputField type="text" name="consultationType" placeholder="In-person/Online" label="Consultation Type" />
+                <InputField type="text" name="consultationType" placeholder="In-person/Online" label="Consultation Type [ In-person, Online ]" />
                 <InputField type="text" name="education" placeholder="Education" label="Education" />
                 <InputField type="number" name="experience" placeholder="Experience" label="Experience (years)" />
                 <InputField type="textarea" name="description" placeholder="Short Description" label="Description" />

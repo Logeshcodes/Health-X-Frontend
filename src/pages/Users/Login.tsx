@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { GOOGLE_CLIENT_ID } from "../../utils/constants";
-
+import PasswordField from "./common/passwordField";
 
 
 // Validation Schema
@@ -171,13 +171,11 @@ const LoginPage = () => {
               {/* Password Field */}
               <div>
                 <div className="relative">
-                  <Field
+                  <PasswordField
                     name="password"
-                    type="password"
-                    placeholder="Password"
-                    className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
-                      errors.password && touched.password ? "focus:ring-red-500" : "focus:ring-purple-500"
-                    }`}
+                    placeholder="password"
+                    
+        
                   />
                   {errors.password && touched.password && (
                     <div className="text-red-500 text-sm mt-1">{errors.password}</div>

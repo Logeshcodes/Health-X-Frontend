@@ -20,10 +20,21 @@ interface DoctorState {
     reducers: {
       setDoctor: (state, action: PayloadAction<DoctorState>) => {
         return { ...state, ...action.payload };
+        
       },
-      clearDoctor: () => initialState,
+      // clearDoctor: () => initialState,
+      clearDoctorDetials: (state) => {
+        
+        state.name = null
+        
+        state.role = null
+
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('doctor');
+        }
+    }
     },
   });
   
-  export const { setDoctor, clearDoctor } = Doctorslice.actions;
+  export const { setDoctor, clearDoctorDetials } = Doctorslice.actions;
   export default Doctorslice.reducer;

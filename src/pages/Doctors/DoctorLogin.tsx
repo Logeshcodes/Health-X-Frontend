@@ -1,8 +1,89 @@
 
 import { Card } from "../../components/Card"
+import * as Yup from "yup"
+import {toast} from 'react-toastify'
+import { Formik, Form, Field } from "formik";
+import PasswordField from "../Users/common/passwordField";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Login } from "../../@types/LoginType";
+import { setDoctor } from "../../redux/slices/DoctorSlice";
+import { login } from "../../api/DoctorAuthentication";
+
+// Validation Schema
+const loginSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 
 const DoctorLogin = () => {
+
+
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+
+  const onSubmit = async (data: Login) => {
+    try {
+      // Perform the login request
+      console.log("Response received:",data);
+      const response = await login(data.email,data.password); // Assuming `login` is an API function
+      console.log("Response received:>", response.message);
+
+      const user = response?.user;
+
+      if (user) {
+        // Store user data in localStorage and show success toast
+        localStorage.setItem("doctor", JSON.stringify(user));
+        toast.success("Welcome to HealthX");
+        console.log('user data ___________>', user)
+
+        // dispatch((setDoctor({
+        //   name: user.name,
+        //   role: user.is_blocked
+
+
+        // })))
+
+        // Redirect to home page after a  delay
+        setTimeout(() => {
+          navigate(`/doctor`);
+        }, 1000);
+      } else {
+        // Log error and handle different error messages
+        console.log("res msg =>>>>", response?.message)
+        if (response?.message == "access denied") {
+          toast.error("Access denied");
+        } else if (response?.message == 'Invalid Password') {
+          toast.error("Invalid Password");
+        } else if (response?.message == 'invalid email id') {
+          toast.error("Invalid email");
+        } else {
+          toast.error('An unexpected error occured')
+        }
+
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  };
+ 
+
+
+
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl bg-white rounded-xl shadow-xl overflow-hidden">
@@ -36,42 +117,83 @@ const DoctorLogin = () => {
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Hi Doctor, Welcome Back! 👋</h2>
             </div>
 
-            <form className="space-y-6">
+            <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+
+          {({ errors, touched }) => (
+            <Form className="space-y-6">
+              {/* Email Field */}
               <div>
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="w-full p-3 rounded-lg border border-gray-300"
-                />
+                <div className="relative">
+                  <Field
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
+                      errors.email && touched.email ? "focus:ring-red-500" : "focus:ring-purple-500"
+                    }`}
+                  />
+                  {errors.email && touched.email && (
+                    <div className="text-red-500 text-sm mt-1">{errors.email}</div>
+                  )}
+                </div>
               </div>
 
+              {/* Password Field */}
               <div>
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="w-full p-3 rounded-lg border border-gray-300"
-                />
+                <div className="relative">
+                  <PasswordField
+                    name="password"
+                    placeholder="password"
+                    
+        
+                  />
+                  {errors.password && touched.password && (
+                    <div className="text-red-500 text-sm mt-1">{errors.password}</div>
+                  )}
+                </div>
+                <div className="text-right">
+                  <a href="/forgot_password" className="text-red-500 hover:text-red-600 text-sm">
+                    Forgot Password?
+                  </a>
+                </div>
               </div>
 
-              {/* <div className="text-right">
-                <a href="#" className="text-sm text-red-500 hover:underline">
-                  Forgot Password?
-                </a>
-              </div> */}
-
-              <button 
-                className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg"
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
               >
                 Login Now
               </button>
 
-              <div className="text-center text-sm text-gray-600">
-                Don't have an account?{' '}
-                <a href="register" className="text-violet-600 hover:underline font-medium">
+              {/* Divider */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or With</span>
+                </div>
+              </div>
+
+              {/* Google Login */}
+              {/* <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID as string}>
+                <GoogleLogin
+                  onSuccess={googleSubmit}
+                  onError={() => console.error("Google Login Failed")}
+                />
+              </GoogleOAuthProvider> */}
+
+              {/* Sign Up Link */}
+              <p className="text-center text-sm">
+                Don't have an account?{" "}
+                <a href="/user/signup" className="text-purple-600 hover:text-purple-700 font-medium">
                   Sign Up
                 </a>
-              </div>
-            </form>
+              </p>
+            </Form>
+          )}
+    </Formik>
           </div>
         </div>
       </Card>

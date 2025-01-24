@@ -99,7 +99,7 @@ const DoctorVerificationOTP = () => {
         localStorage.removeItem('verificationToken')
         localStorage.removeItem('email')
         setTimeout(()=>{
-          navigate('/doctor')
+          navigate('/doctor/register')
           
         },1000)
   
