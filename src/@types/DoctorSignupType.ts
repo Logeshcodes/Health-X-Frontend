@@ -9,6 +9,6 @@ export type DoctorRegister = {
     description: string;
     password: string;
     confirmPassword: string;
-    MedicalLicense: string | File; // MedicalLicense can be a string or File for uploads
+    MedicalLicense:string | File ; // MedicalLicense can be a string or File for uploads
   };
   

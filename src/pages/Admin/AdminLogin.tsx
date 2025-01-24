@@ -1,6 +1,67 @@
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup"
+import {toast} from 'react-toastify'
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import PasswordField from "../Users/common/passwordField";
+import { ADMIN_EMAIL , ADMIN_PASSWORD } from "../../config/config";
 
 
 const AdminLogin = () => {
+
+
+
+  const loginSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .required("Password is required"),
+  });
+
+  const navigate = useNavigate();
+
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const onSubmit = (data: { email: string; password: string }) => {
+    try {
+      if (data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD) {
+        toast.success("Welcome, Admin!");
+        localStorage.setItem("isAdmin", "true");
+
+        setTimeout(() => {
+          navigate(`/admin/dashboard`);
+        }, 1000);
+      } else {
+        if (data.email !== ADMIN_EMAIL) {
+          toast.error("Invalid Email");
+        } else {
+          toast.error("Invalid Password");
+        }
+      }
+    } catch (error) {
+      console.error("Error during admin login validation:", error);
+      toast.error("An unexpected error occurred");
+    }
+  };
+
+
+
+
+ // Check if admin is already logged in
+
+  useEffect(() => {
+  
+    if (localStorage.getItem("isAdmin")) {
+      navigate("/admin/dashboard"); 
+    }
+  }, [navigate]);
+  
+
+
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="container mx-auto px-4">
@@ -34,35 +95,66 @@ const AdminLogin = () => {
               <p className="mb-8 text-gray-600">
                 Please login to access your dashboard
               </p>
-              <form>
-                <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Username
-                  </label>
-                  <input 
-                    type="text"
-                    className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:border-purple-500 focus:bg-white focus:outline-none"
-                    placeholder="Enter your username"
-                    required
-                  />
-                </div>
-                <div className="mb-6">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Password
-                  </label>
-                  <input 
-                    type="password"
-                    className="w-full px-4 py-3 rounded-lg bg-gray-100 border border-gray-300 focus:border-purple-500 focus:bg-white focus:outline-none"
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-                <button
-                  className="w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 focus:outline-none focus:shadow-outline transform transition-all duration-300 ease-in-out"
-                >
-                  Login Now
-                </button>
-              </form>
+             
+                     <Formik initialValues={initialValues} validationSchema={loginSchema} onSubmit={onSubmit}>
+             
+                       {({ errors, touched }) => (
+                         <Form className="space-y-6">
+                           {/* Email Field */}
+                           <div>
+                             <div className="relative">
+                               <Field
+                                 name="email"
+                                 type="email"
+                                 placeholder="Email"
+                                 className={`w-full px-4 py-3 bg-gray-50 rounded-lg focus:outline-none focus:ring-2 ${
+                                   errors.email && touched.email ? "focus:ring-red-500" : "focus:ring-purple-500"
+                                 }`}
+                               />
+                               {errors.email && touched.email && (
+                                 <div className="text-red-500 text-sm mt-1">{errors.email}</div>
+                               )}
+                             </div>
+                           </div>
+             
+                           {/* Password Field */}
+                           <div>
+                             <div className="relative">
+                             <div>
+                                <PasswordField  name="password" placeholder="Password" />
+                            </div>
+                               {errors.password && touched.password && (
+                                 <div className="text-red-500 text-sm mt-1">{errors.password}</div>
+                               )}
+                             </div>
+                             <div className="p-4">
+                               
+                             </div>
+                           </div>
+             
+                           {/* Submit Button */}
+                           <button
+                             type="submit"
+                             className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors"
+                           >
+                             Login Now
+                           </button>
+             
+                           {/* Divider */}
+                           <div className="relative my-6">
+                             <div className="absolute inset-0 flex items-center">
+                               <div className="w-full border-t border-gray-200"></div>
+                             </div>
+                             <div className="relative flex justify-center text-sm">
+                               <span className="px-2 bg-white text-gray-500">Admin Credentials</span>
+                             </div>
+                           </div>
+             
+                          
+                           
+                         </Form>
+                       )}
+                 </Formik>
             </div>
           </div>
         </div>

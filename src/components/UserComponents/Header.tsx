@@ -1,27 +1,46 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogPanel } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Home, Users, Calendar, Grid, Info, LogIn } from 'lucide-react';
+import { Home, Users, Calendar, Grid, Info, LogIn, ChevronDown, User, MessageSquare, Wallet, LogOut  } from 'lucide-react';
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/reducer/reducer"
 import { clearUserDetials } from "../../redux/slices/userSlice";
-import axios from 'axios';
+
 
 const navigation = [
-  { name: 'Home', href: '/', id: 'home', icon: Home },
-  { name: 'Doctors', href: '/doctor_list', id: 'doctors', icon: Users },
-  { name: 'Appointments', href: '/appointments', id: 'appointments', icon: Calendar },
-  { name: 'Service', href: '/services', id: 'services', icon: Grid },
-  { name: 'About Us', href: '/about', id: 'about', icon: Info },
+  { name: 'Home', href: '/user', id: 'home', icon: Home },
+  { name: 'Doctors', href: '/user/doctor_list', id: 'doctors', icon: Users },
+  { name: 'Appointments', href: '/user/appointments', id: 'appointments', icon: Calendar },
+  { name: 'Service', href: '/user/services', id: 'services', icon: Grid },
+  { name: 'About Us', href: '/user/about', id: 'about', icon: Info },
 ];
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
+
+
+  const [userId, setUserId] = useState(null);
+
+
+  useEffect(() => {
+    
+    const userDataString = localStorage.getItem("user"); // localStorage.getItem may return null
+    if (userDataString) {
+      try {
+        const userData = JSON.parse(userDataString);   // Parse only if not null
+        if (userData?.userId ) {
+          setUserId(userData); 
+        }
+      } catch (error) {
+        console.error("Error parsing user data from localStorage:", error);
+      }
+    }
+  }, []);
 
 
 
@@ -53,6 +72,9 @@ export default function Header() {
     navigate("/user/login");
   };
 
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => setDropdownOpen(!isDropdownOpen);
+
   return (
     <div className="bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -65,7 +87,7 @@ export default function Header() {
               <span className="sr-only">HealthX</span>
               <img
                 alt="HealthX"
-                src="Logo.png"
+                src="../../../Logo.png"
                 title="HealthX"
                 className="h-16 w-auto"
               />
@@ -99,15 +121,61 @@ export default function Header() {
             ))}
           </div>
 
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            {user ? (
-              <a href="/profile">
-                <img
-                  src={'../../../default-avatar.png'} 
-                  alt="Profile"
-                  className="h-10 w-10 rounded-full border-2 border-white object-cover cursor-pointer"
-                />
-              </a>
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end ">
+            {userId ? (
+              
+
+              <div className="flex items-center gap-2 mr-14">
+              <img
+                src="../../../profile.jpg" 
+                alt="Profile"
+                className="h-12 w-12 rounded-full border-2 border-white object-cover cursor-pointer"
+              />
+               <button
+                onClick={toggleDropdown}
+                className="flex items-center justify-center p-1 mt-8 rounded-md  focus:outline-none"
+                >
+                <ChevronDown size={24} />
+              </button>
+              {isDropdownOpen && (
+                <div
+                  className={`absolute right-0  mt-56 w-48 bg-white shadow-lg rounded-lg ${
+                    isDropdownOpen ? "block" : "hidden"
+                  }`}
+                >
+                  <ul className="text-gray-700">
+                    <li
+                      className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => (window.location.href = "/profile")}
+                    >
+                      <User size={18} />
+                      Profile
+                    </li>
+                    <li
+                      className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => (window.location.href = "/chat")}
+                    >
+                      <MessageSquare size={18} />
+                      Chat
+                    </li>
+                    <li
+                      className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => (window.location.href = "/wallet")}
+                    >
+                      <Wallet size={18} />
+                      Wallet
+                    </li>
+                    <li
+                      className="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 text-red-500"
+                      onClick={handleLogout}
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
             ) : (
               <a href="/user/login">
                 <button
@@ -119,6 +187,7 @@ export default function Header() {
               </a>
             )}
           </div>
+         
         </nav>
 
         {/* Mobile Menu */}

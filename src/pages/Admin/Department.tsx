@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { 
   Pencil, 
   Trash2, 
-  Search,
   Plus,
-  ChevronLeft,
-  ChevronRight
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/AdminComponents/Dialog";
 

@@ -5,14 +5,20 @@ import { DoctorRegister } from "../@types/DoctorSignupType";
 
 
 
-export const signup = async (DoctorRegister: DoctorRegister): Promise<any> => {
+export const signup = async (DoctorRegister: FormData): Promise<any> => {
 
   console.log("doctor data..", DoctorRegister)
+  console.log("doctor data..", FormData)
 
     try {
       const response = await API.post(
         authentictaionRoutes.signup_Doctor,
-        DoctorRegister
+        DoctorRegister,{
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
       );
       console.log(response.data, "response????");
       return response.data;

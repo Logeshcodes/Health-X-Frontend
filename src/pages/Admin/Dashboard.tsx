@@ -1,31 +1,44 @@
-// Dashboard Component
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 import { Menu, Sun, Moon, Users, UserCheck, Layout, LogOut, CircleUserIcon, Warehouse } from 'lucide-react';
-import { Card } from '../../components/Card';
-import Department from './Department';
+
 
 const Dashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isDarkMode, setDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   const toggleTheme = () => setDarkMode(!isDarkMode);
 
   const stats = {
-    doctorCount: 4689,
+    doctorCount: 4689,  // dashboard
     usersCount: 10293,
     appointments: 89000,
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("isAdmin"); 
+    toast.success("Logged out successfully!");
+    navigate("/admin/login"); 
+  };
+
+  // Sidebar items with href
   const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Layout },
-    { id: 'verified-doctors', label: 'Verified Doctors', icon: UserCheck },
-    { id: 'requested-doctors', label: 'Requested Doctors', icon: Users },
-    { id: 'departments', label: 'Departments', icon: Warehouse },
-    { id: 'users', label: 'Users', icon: CircleUserIcon },
-    { id: 'logout', label: 'Logout', icon: LogOut },
+    { id: 'dashboard', label: 'Dashboard', icon: Layout, href: '/admin/dashboard' },
+    { id: 'verified-doctors', label: 'Verified Doctors', icon: UserCheck, href: '/admin/verified-doctors' },
+    { id: 'requested-doctors', label: 'Requested Doctors', icon: Users, href: '/admin/requested-doctors' },
+    { id: 'departments', label: 'Departments', icon: Warehouse, href: '/admin/department' },
+    { id: 'users', label: 'Users', icon: CircleUserIcon, href: '/admin/users' },
+    { id: 'logout', label: 'Logout', icon: LogOut, action: handleLogout },
   ];
+
+  const handleNavigation = (href : string) => {
+    window.location.href = href; // Use the navigate function from 'react-router-dom' for navigation
+    setActiveTab(href); 
+  };
 
   return (
     <div className={`h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
@@ -51,7 +64,14 @@ const Dashboard = () => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => {
+                    if (item.href) {
+                      handleNavigation(item.href); // Navigate if href is defined
+                    } else {
+                      item.action && item.action(); // Execute action (logout) if provided
+                    }
+                    setActiveTab(item.id);
+                  }}
                   className={`
                     w-full flex items-center gap-4 p-3 rounded-lg
                     ${activeTab === item.id ? (isDarkMode ? 'bg-blue-600' : 'bg-blue-100') : 'hover:bg-gray-700'}
@@ -75,38 +95,7 @@ const Dashboard = () => {
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
           </div>
-
-          {activeTab === 'dashboard' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className={`p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h3 className="text-lg mb-2">Doctor Count</h3>
-                  <p className="text-3xl font-bold">{stats.doctorCount}</p>
-                </Card>
-                <Card className={`p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h3 className="text-lg mb-2">Users Count</h3>
-                  <p className="text-3xl font-bold">{stats.usersCount}</p>
-                </Card>
-                <Card className={`p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h3 className="text-lg mb-2">Appointments</h3>
-                  <p className="text-3xl font-bold">{stats.appointments}</p>
-                </Card>
-              </div>
-
-              <Card className={`p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} h-96`}>
-                <h3 className="text-lg mb-4">Graph Overview</h3>
-                <div className="h-full flex items-center justify-center text-gray-500">
-                  Graph visualization would go here
-                </div>
-              </Card>
-            </div>
-          )}
-
-          {activeTab === 'departments' && (
-            <div className={`p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg`}>
-              <Department isDarkMode={isDarkMode} />
-            </div>
-          )}
+        
         </div>
       </div>
     </div>
